@@ -1,0 +1,5 @@
+/Users/hao.gu/code/dockercompose-springboot-mysql-nginx/app/src/main/java/com/guhao/controller/VisitorController.java
+/Users/hao.gu/code/dockercompose-springboot-mysql-nginx/app/src/main/java/com/guhao/config/RedisConfig.java
+/Users/hao.gu/code/dockercompose-springboot-mysql-nginx/app/src/main/java/com/guhao/ComposeApplication.java
+/Users/hao.gu/code/dockercompose-springboot-mysql-nginx/app/src/main/java/com/guhao/repository/VisitorRepository.java
+/Users/hao.gu/code/dockercompose-springboot-mysql-nginx/app/src/main/java/com/guhao/entity/Visitor.java

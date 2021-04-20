@@ -1,0 +1,75 @@
+version: '3'
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:1.13
+    networks:
+      - front
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+
+  mysql:
+    container_name: mysql
+    image: "mysql/mysql-server:5.7"
+    networks:
+      - back
+    environment:
+      MYSQL_DATABASE: test
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"
+    restart: always
+
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    networks:
+      - front
+    ports:
+      - "6379:6379"
+    restart: always
+
+  service:
+    container_name: back-end
+    restart: always
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    networks:
+      - front
+      - back
+    ports:
+      - "8080:8080"
+    depends_on:
+      - nginx
+      - mysql
+      - redis
+#
+#  app:
+#    restart: always
+#    build: ./app
+#    working_dir: /app
+#    networks:
+#      - front
+#      - back
+#    volumes:
+#      - ./app:/app
+#      - ~/.m2:/root/.m2
+#    expose:
+#      - "8080"
+#    depends_on:
+#      - nginx
+#      - mysql
+#      - redis
+#    command: mvn clean spring-boot:run -Dspring-boot.run.profiles=docker
