@@ -17,6 +17,8 @@ services:
       - 443:443
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - service
 
   mysql:
     container_name: mysql
@@ -27,49 +29,46 @@ services:
       MYSQL_DATABASE: test
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: '%'
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
     restart: always
 
   redis:
     container_name: redis
     image: "redis:alpine"
     networks:
-      - front
-    ports:
-      - "6379:6379"
+      - back
+    expose:
+      - "6379"
     restart: always
 
   service:
     container_name: back-end
     restart: always
-    build:
-      context: ./app
-      dockerfile: Dockerfile
+    image: "southestsoul/docker-compose"
     networks:
       - front
       - back
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     depends_on:
-      - nginx
       - mysql
       - redis
-#
-#  app:
+
+#  service:
+#    container_name: back-end
 #    restart: always
-#    build: ./app
-#    working_dir: /app
+#    build:
+#      context: ./app
+#      dockerfile: Dockerfile
 #    networks:
 #      - front
 #      - back
-#    volumes:
-#      - ./app:/app
-#      - ~/.m2:/root/.m2
 #    expose:
 #      - "8080"
 #    depends_on:
-#      - nginx
 #      - mysql
 #      - redis
-#    command: mvn clean spring-boot:run -Dspring-boot.run.profiles=docker
+
